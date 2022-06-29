@@ -1,3 +1,4 @@
+// this function is for finding wall pairs which can hold water
 export const findPairs = (arr) => {
   const pairs = []
   let counter = false
@@ -7,7 +8,6 @@ export const findPairs = (arr) => {
   for (let i = 0; i < arr.length; i++) {
     index += 1
     if (arr[i] !== 0 && counter === false && !Boolean(arr[i + 1])) {
-    // if (arr[i] !== 0 && counter === false) {
       if (start === 0 && !Boolean(arr[i + 1])) start = index
       pairs.push(arr[i])
       counter = true
@@ -18,6 +18,7 @@ export const findPairs = (arr) => {
       continue
     }
     if (arr[i] !== 0 && counter === false && Boolean(arr[i + 1]) && pairs.length && pairs.length - 1 !== 0) {
+      pairs.push(arr[i])
       end = index
       break
     }
@@ -30,25 +31,30 @@ export const findPairs = (arr) => {
   return [pairs, index, start, end]
 }
 
-export const createMatrix = (list, waterIndex) => {
+export const createMatrix = (list, waterIndex, walls, wallIndex) => {
   const arr = []
   const height = [...list].sort((a, b) => b - a)[0]
   for (let i = height; i > 0; i--) {
     const items = []
-    // calculate right amount of water both side of wall by getting lowest height of wall pair
-    // calculate right amount of water both side of wall by getting lowest height of wall pair
-    // calculate right amount of water both side of wall by getting lowest height of wall pair
-    // calculate right amount of water both side of wall by getting lowest height of wall pair
-    // calculate right amount of water both side of wall by getting lowest height of wall pair
-    // calculate right amount of water both side of wall by getting lowest height of wall pair
-    // do this after dinner
     list.forEach((item, position) => {
+      const heights = {}
+      wallIndex.forEach((element, posi) => {
+        let count = element.start;
+        while (count < element.end) {
+          heights[`${count}`] = walls[posi].sort((a, b) => b - a)[1]
+          count += 1
+        }
+      })
+      const keys = Object.keys(heights).map(item => parseInt(item))
       if (
         waterIndex.includes(position) &&
         item === 0 &&
         (items[items.length - 1] === 1 || items[items.length - 1] === 2)
-        // && i <= list[position + 1]
-      ) items.push(2)
+        && keys.includes(position)
+        && i <= heights[position]
+      ) {
+        items.push(2)
+      }
       else if (i <= item && !waterIndex.includes(position)) items.push(1)
       else items.push(0)
     })
@@ -66,6 +72,5 @@ export const calculateWaterPosition = (wallIndex) => {
       counter += 1
     }
   })
-  // console.log({wallIndex,index})
   return index
 }
