@@ -6,8 +6,9 @@ export const findPairs = (arr) => {
   let end = 0
   for (let i = 0; i < arr.length; i++) {
     index += 1
-    if (arr[i] !== 0 && counter === false) {
-      if (start === 0) start = index
+    if (arr[i] !== 0 && counter === false && !Boolean(arr[i + 1])) {
+    // if (arr[i] !== 0 && counter === false) {
+      if (start === 0 && !Boolean(arr[i + 1])) start = index
       pairs.push(arr[i])
       counter = true
       if (pairs.length && pairs.length - 1 !== 0) {
@@ -15,6 +16,10 @@ export const findPairs = (arr) => {
         break
       }
       continue
+    }
+    if (arr[i] !== 0 && counter === false && Boolean(arr[i + 1]) && pairs.length && pairs.length - 1 !== 0) {
+      end = index
+      break
     }
     if (counter = true && arr[i] === 0) {
       if (pairs.length !== 0) pairs.push(arr[i])
@@ -30,11 +35,19 @@ export const createMatrix = (list, waterIndex) => {
   const height = [...list].sort((a, b) => b - a)[0]
   for (let i = height; i > 0; i--) {
     const items = []
+    // calculate right amount of water both side of wall by getting lowest height of wall pair
+    // calculate right amount of water both side of wall by getting lowest height of wall pair
+    // calculate right amount of water both side of wall by getting lowest height of wall pair
+    // calculate right amount of water both side of wall by getting lowest height of wall pair
+    // calculate right amount of water both side of wall by getting lowest height of wall pair
+    // calculate right amount of water both side of wall by getting lowest height of wall pair
+    // do this after dinner
     list.forEach((item, position) => {
       if (
         waterIndex.includes(position) &&
         item === 0 &&
         (items[items.length - 1] === 1 || items[items.length - 1] === 2)
+        // && i <= list[position + 1]
       ) items.push(2)
       else if (i <= item && !waterIndex.includes(position)) items.push(1)
       else items.push(0)
@@ -53,5 +66,6 @@ export const calculateWaterPosition = (wallIndex) => {
       counter += 1
     }
   })
+  // console.log({wallIndex,index})
   return index
 }

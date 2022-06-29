@@ -3,30 +3,33 @@ import { useEffect, useState } from 'react';
 import { calculateWaterPosition, createMatrix, findPairs } from './utils';
 
 function App() {
-  const [list, setList] = useState('')
+  // const [list, setList] = useState('0,3,0,3')
+  // const [list, setList] = useState('0,4,7,0,4')
+  // const [list, setList] = useState('0,4,7,0,4,3')
+  const [list, setList] = useState('0,4,5,0,0,0,8,0,2,3')
   // const [list, setList] = useState('')
   const [pairs, setPairs] = useState([])
   const [totalunit, setTotalUnit] = useState(0)
   const [matrix, setMatrix] = useState(null)
   // 0,4,0,0,0,6,0,6,4,0
-  const [array, setArray] = useState([4, 0, 5, 0, 0, 6, 0, 6, 4, 0])
+  const [array, setArray] = useState([0, 4, 0, 3, 0, 6, 0, 6, 0, 4])
   // const [array, setArray] = useState([0, 4, 0, 0, 0, 6, 0, 6, 4, 0])
-  const [tableHeight, setTableHeight] = useState([])
-  const [tableWidth, setTabelWidth] = useState([])
-  const [wallPositionIndex, setWallPositionIndex] = useState([])
-  const [waterPosition, setWaterPosition] = useState([])
-
-  // useEffect(() => {
-  //   const data = list.split(',').map(item=>parseInt(item))
-  //   setArray(data)
-
-  // }, [list])
-  // console.log(findPairs(array)[0])
+  // const [tableHeight, setTableHeight] = useState([])
+  // const [tableWidth, setTabelWidth] = useState([])
+  // const [wallPositionIndex, setWallPositionIndex] = useState([])
+  // const [waterPosition, setWaterPosition] = useState([])
 
   useEffect(() => {
-    setTableHeight([...Array([...array].sort((a, b) => b - a)[0]).keys()]);
-    setTabelWidth([...Array(array.length).keys()])
-  }, [array])
+    const data = list.split(',').map(item => parseInt(item))
+    setArray(data)
+  }, [list])
+
+  // useEffect(() => {
+  //   if (array.length) {
+  //     setTableHeight([...Array([...array].sort((a, b) => b - a)[0]).keys()]);
+  //     setTabelWidth([...Array(array.length).keys()])
+  //   }
+  // }, [array])
 
   // 1. first step is to find wall pair
   // 2. then calculate water inside it
@@ -35,30 +38,32 @@ function App() {
 
 
   const calculateResult = (arr) => {
-    console.log(arr)
     // here we have 2d array, each array will have 2 walls 
     // and distance between them which is 1 or greater than 1
     const walls = [];
     let unit = 0
     let counter = 0
     const wallIndex = []
-    while (arr.length > 3) {
+    while (arr.length > 2) {
       let [pair, index, start, end] = findPairs(arr)
+      console.log(end)
       walls.push(pair)
-      console.log(pair)
       setPairs(walls)
       arr = arr.slice(index - 1)
+      // start = (counter === 0 && arr[0] === 0) ? start - 1 : start
+      // start = counter === 0 ? start : start - 1
       start = start - 1
       end = end - 1
-      wallIndex.push({ start: start + counter, end: end + counter })
-      counter = end
+      wallIndex.push({ start: (start + counter), end: (end + counter) })
+      counter += end
     }
-    setWallPositionIndex(wallIndex)
+    console.log({ wallIndex, walls })
+    // setWallPositionIndex(wallIndex)
     const waterIndex = calculateWaterPosition(wallIndex)
     const matrixData = createMatrix(array, waterIndex)
-    console.log(matrixData)
+    // console.log(waterIndex)
     setMatrix(matrixData)
-    setWaterPosition(waterIndex)
+    // setWaterPosition(waterIndex)
     walls.forEach((item) => {
       item = item.sort((a, b) => b - a)
       let waterUnit = 0
@@ -68,7 +73,6 @@ function App() {
     })
     setTotalUnit(unit)
   }
-  // const list = [0, 4, 0, 0, 0, 6, 0, 6, 4, 0]
   return (
     <div className="App">
       <input
@@ -80,6 +84,8 @@ function App() {
       />
       <button onClick={() => calculateResult(array)}>Generate Table</button>
 
+      <h2>{JSON.stringify(array)}</h2>
+      <h3>{totalunit}</h3>
       <table>
         <tbody>
           {
