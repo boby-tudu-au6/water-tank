@@ -74,3 +74,33 @@ export const calculateWaterPosition = (wallIndex) => {
   })
   return index
 }
+
+export const calculateMatrixData = (data) => {
+  const newMatrix = [...data]
+  const pairs = []
+
+  for (let i = 0; i < newMatrix.length; i++) {
+    let start = false
+    let startPos = 0
+    for (let j = 0; j < newMatrix[i].length; j++) {
+      if (start === true && newMatrix[i][j] === 1) {
+        start = false
+        pairs.push([startPos, j])
+      }
+      if (newMatrix[i][j] === 1 && newMatrix[i][j + 1] === 0) {
+        start = true
+        startPos = j
+      }
+      if (j === newMatrix[i].length - 1 && start === true) pairs.push([])
+    }
+    startPos = 0
+    start = false
+  }
+
+  for (let j = 0; j < pairs.length; j++) {
+    for (let i = pairs[j][0] + 1; i < pairs[j][1]; i++) {
+      newMatrix[j][i] = 2
+    }
+  }
+  return newMatrix
+}

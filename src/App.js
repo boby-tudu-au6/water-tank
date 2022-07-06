@@ -1,9 +1,14 @@
 import './App.css';
 import { useEffect, useState } from 'react';
-import { calculateWaterPosition, createMatrix, findPairs } from './utils';
+import {
+  findPairs,
+  createMatrix,
+  calculateMatrixData,
+  calculateWaterPosition,
+} from './utils';
 
 function App() {
-  const [list, setList] = useState('0,3,0,3')
+  const [list, setList] = useState('5,3,0,3,4')
   const [totalunit, setTotalUnit] = useState(0)
   const [matrix, setMatrix] = useState(null)
   const [array, setArray] = useState([])
@@ -35,13 +40,13 @@ function App() {
     }
     const waterIndex = calculateWaterPosition(wallIndex)
     const matrixData = createMatrix(array, waterIndex, walls, wallIndex)
-    setMatrix(matrixData)
-    walls.forEach((item) => {
-      item = item.sort((a, b) => b - a)
-      let waterUnit = 0
-      if (item[0] > item[1]) waterUnit = item[1] * (item.length - 2)
-      else waterUnit = item[0] * (item.length - 2)
-      unit += waterUnit
+    const newMatrix = calculateMatrixData(matrixData)
+    setMatrix(newMatrix)
+    // setMatrix(matrixData)
+    newMatrix.forEach(item => {
+      item.forEach(ele => {
+        if (ele === 2) unit += 1
+      })
     })
     setTotalUnit(unit)
   }
