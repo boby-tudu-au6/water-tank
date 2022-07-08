@@ -1,10 +1,8 @@
 import './App.css';
 import { useEffect, useState } from 'react';
 import {
-  findPairs,
   createMatrix,
-  calculateMatrixData,
-  calculateWaterPosition,
+  fillWater,
 } from './utils';
 
 function App() {
@@ -18,32 +16,12 @@ function App() {
     setArray(data)
   }, [list])
 
-  // 1. first step is to find wall pair
-  // 2. then calculate water inside it
-
-  
-
-
   const calculateResult = (arr) => {
-    const walls = [];
     let unit = 0
-    let counter = 0
-    const wallIndex = []
-    while (arr.length > 2) {
-      let [pair, index, start, end] = findPairs(arr)
-      walls.push(pair)
-      arr = arr.slice(index - 1)
-      start = start - 1
-      end = end - 1
-      wallIndex.push({ start: (start + counter), end: (end + counter) })
-      counter += end
-    }
-    const waterIndex = calculateWaterPosition(wallIndex)
-    const matrixData = createMatrix(array, waterIndex, walls, wallIndex)
-    const newMatrix = calculateMatrixData(matrixData)
-    setMatrix(newMatrix)
-    // setMatrix(matrixData)
-    newMatrix.forEach(item => {
+    const matrix = createMatrix(arr)
+    const matrixWithWater = fillWater(matrix)
+    setMatrix(matrixWithWater)
+    matrixWithWater.forEach(item => {
       item.forEach(ele => {
         if (ele === 2) unit += 1
       })
